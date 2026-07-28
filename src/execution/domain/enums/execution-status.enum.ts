@@ -1,0 +1,7 @@
+export enum ExecutionStatus {
+  QUEUED = "QUEUED",
+  IN_DIAGNOSIS = "IN_DIAGNOSIS",
+  IN_REPAIR = "IN_REPAIR",
+  FINISHED = "FINISHED",
+  FAILED = "FAILED",
+}
