@@ -15,10 +15,10 @@ data:
   JWT_ISSUER: "fiap-tech-challenge-auth-function"
   JWT_AUDIENCE: "fiap-tech-challenge-api"
   JWT_REQUIRED_CUSTOMER_STATUS: "ACTIVE"
-  DB_HOST: "replace-with-managed-mysql-endpoint"
+  DB_HOST: "${WORKSHOP_DB_HOST}"
   DB_PORT: "3306"
   DB_DATABASE: "workshop_service"
-  DB_SSL: "true"
+  DB_SSL: !!str ${WORKSHOP_DB_SSL}
   MESSAGING_ENABLED: "true"
   RABBITMQ_MAX_RETRIES: "3"
   CONSUMED_MESSAGE_LEASE_MS: "300000"
