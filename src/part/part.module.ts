@@ -3,6 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PartService } from "./application/services/part.service";
 import { StockReservationService } from "./application/services/stock-reservation.service";
 import { PART_REPOSITORY, STOCK_RESERVATION_REPOSITORY } from "./part.tokens";
+import { InternalPartController } from "./infrastructure/controllers/internal-part.controller";
 import { PartController } from "./infrastructure/controllers/part.controller";
 import { TypeOrmPartRepository } from "./infrastructure/repositories/typeorm-part.repository";
 import { TypeOrmStockReservationRepository } from "./infrastructure/repositories/typeorm-stock-reservation.repository";
@@ -27,7 +28,7 @@ import { TypeOrmStockReleaseUnitOfWork } from "./infrastructure/persistence/type
     ]),
     MessagingModule,
   ],
-  controllers: [PartController],
+  controllers: [PartController, InternalPartController],
   providers: [
     PartService,
     StockReservationService,
