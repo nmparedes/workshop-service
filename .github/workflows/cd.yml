@@ -26,7 +26,12 @@ jobs:
       IMAGE_SHA: ghcr.io/${{ github.repository_owner }}/workshop-service:${{ github.event.workflow_run.head_sha }}
       IMAGE_CHANNEL: ghcr.io/${{ github.repository_owner }}/workshop-service:homologation
       K8S_NAMESPACE: ${{ vars.K8S_NAMESPACE }}
+      WORKSHOP_DB_HOST: ${{ vars.WORKSHOP_DB_HOST }}
+      WORKSHOP_DB_SSL: ${{ vars.WORKSHOP_DB_SSL }}
       KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
+      WORKSHOP_DB_USERNAME: ${{ secrets.WORKSHOP_DB_USERNAME }}
+      WORKSHOP_DB_PASSWORD: ${{ secrets.WORKSHOP_DB_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,6 +42,11 @@ jobs:
         run: |
           test -n "${K8S_NAMESPACE}" || { echo "K8S_NAMESPACE is required."; exit 1; }
           test -n "${KUBECONFIG_B64}" || { echo "KUBECONFIG_B64 is required."; exit 1; }
+          test -n "${WORKSHOP_DB_HOST}" || { echo "WORKSHOP_DB_HOST is required."; exit 1; }
+          test -n "${WORKSHOP_DB_SSL}" || { echo "WORKSHOP_DB_SSL is required."; exit 1; }
+          test -n "${WORKSHOP_DB_USERNAME}" || { echo "WORKSHOP_DB_USERNAME is required."; exit 1; }
+          test -n "${WORKSHOP_DB_PASSWORD}" || { echo "WORKSHOP_DB_PASSWORD is required."; exit 1; }
+          test -n "${JWT_SECRET}" || { echo "JWT_SECRET is required."; exit 1; }
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -62,6 +72,7 @@ jobs:
       - name: Apply service manifests
         run: |
           kubectl kustomize k8s \
+            | python3 -c 'import os,sys; sys.stdout.write(os.path.expandvars(sys.stdin.read()))' \
             | sed "s|ghcr.io/replace-me/workshop-service:latest|${IMAGE_SHA}|g" \
             | kubectl apply -n "${K8S_NAMESPACE}" -f -
 
